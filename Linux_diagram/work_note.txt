@@ -1,0 +1,229 @@
+1.注意
+xxx_id这种表示支持列表的结构体，定义为数组，在结束时需要以空数组或数据结尾。
+2.i2c_driver中的电源管理函数在i2c_driver.driver.pm下和i2c_driver.suspend/resume下的区别
+3.linux/i2c.h下的
+    ret = i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_I2C_BLOCK);
+    检查i2c功能
+4.i2c电源管理即第2条中的.pm下的工作流程
+5.module_init 和 late_call的区别
+6.i2c_smbus_write_i2c_block_data和i2c_smbus_write_block_data的区别前者不发送长度，后者发送长度
+7.在源码中合适用recv，send何时用write,read
+8.设备树结构
+9.of_get_named_gpio_flags函数中flag参数的作用 目前查到和enum of_gpio_flags有关
+    https://elixir.bootlin.com/linux/v4.3/source/include/linux/of_gpio.h#L31
+10.源码区别ota是编译完成的img，husky.pt是没编的源码
+在husky.pt中o，p代表的是安卓版本，stable是miui稳定版，dev是miui开发版，native是android原生版
+11.提交代码
+	1>.新建一个branch 
+		repo start xxx
+	2>.git add <filename>
+	   git commit -s
+	   或者
+	   git commit -a -s
+	3>.repo upload . --cbr	(current branch)
+12.其他git操作
+	1>.同步repo
+		repo sync . -cd
+	2>.删除branch
+		git branch -D <branch name>
+	3>.生成patch
+		基于上几次内容打包	gi
+		git format-patch HEAD^  有几个^就会打几个patch，从最近一次打起
+		git format-patch HEAD^^ 最近的二个patch内容
+		以下代码作用同上
+		git format-patch -1 
+		git format-patch -2
+	4>.使用patch
+		git am <patch name>		保存原有commit
+		git apply <patch name>		不保存原有commit
+13.MODULE_DEVICE_TABLE的作用
+14.测试demo *#*#6484#*#*
+15.git错误
+$repo sync . -cd
+prior sync failed; rebase still in progress
+==================================================
+$ git rebase --abort 
+It looks like git-am is in progress. Cannot rebase.
+$ git am --abort 
+error: You seem to have moved HEAD since the last 'am' failure.
+Not rewinding to ORIG_HEAD
+$ git rebase --abort
+No rebase in progress?
+
+解决
+
+16.触屏incell/oncell的区别
+
+17.对比st的固件ihex和ftb的区别及.ihex的放置位置
+st的.ftb实际就是binary文件用objcopy即可
+下/固件位置在firmware
+
+18.
+$ command > file 2>&1
+$ command >> file 2>&1
+怎么理解？？
+
+这里的&没有固定的意思
+
+放在>后面的&，表示重定向的目标不是一个文件，而是一个文件描述符，内置的文件描述符如下
+
+1 => stdout
+2 => stderr
+0 => stdin
+
+换言之 2>1 代表将stderr重定向到当前路径下文件名为1的regular file中，而2>&1代表将stderr重定向到文件描述符为1的文件(即/dev/stdout)中，这个文件就是stdout在file system中的映射
+
+而&>file是一种特殊的用法，也可以写成>&file，二者的意思完全相同，都等价于
+
+>file 2>&1
+
+此处&>或者>&视作整体，分开没有单独的含义
+
+顺序问题：
+
+find /etc -name .bashrc > list 2>&1
+# 我想问为什么不能调下顺序,比如这样
+find /etc -name .bashrc 2>&1 > list
+
+这个是从左到右有顺序的
+
+第一种
+
+xxx > list 2>&1
+
+先将要输出到stdout的内容重定向到文件，此时文件list就是这个程序的stdout，再将stderr重定向到stdout，也就是文件list
+
+第二种
+
+xxx 2>&1 > list
+
+先将要输出到stderr的内容重定向到stdout，此时会产生一个stdout的拷贝，作为程序的stderr，而程序原本要输出到stdout的内容，依然是对接在stdout原身上的，因此第二步重定向stdout，对stdout的拷贝不产生任何影响
+
+例如：
+cat file > tmp
+实际拓展开就是
+cat file 1>tmp
+而cat file > tmp 2>&1
+拓展开就是
+cat file 1>tmp 2>&1
+是先将文件描述符1中的文件stdout替换为tmp即将输出替换为tmp，之后2>&1则是将stderr的输出重定向到当前的文件描述符1表示的文件中，此时1表示的为tmp即将stderr重定向到tmp中。
+
+19.
+approach
+particular
+analyze
+retrieve
+sake
+Diagnostic
+abnormal
+subject to
+exploit
+concurrency
+assurance
+procedure
+preserve
+optimal
+demand
+constraint
+propagate
+exclusive
+dummy
+guarantee
+collisions
+glue
+fatal
+
+20.
+adb root
+adb disable-verity
+会有以下输出
+Verity disabled on /vendor
+Verity disabled on /system
+改命令关闭了系统校准（具体关闭了什么校准？）
+
+21.
+如果你要定位某个文件的某几行是谁修改的, 那么只要运行
+
+    git blame -L n,m [filename]
+
+你就会得到当前commit（即HEAD所指向的commit）的这个文件n-m行的详细修改信息:包括SHA,日期和作者
+
+22.bugreport
+亮灭屏在dmesg中的关键字DSI_CMD_SET_ON/OFF
+完整log如下：
+[108627.563188] msm-dsi-panel:[dsi_panel_disable:4814] [LCD] dsi_panel_disable: DSI_CMD_SET_OFF
+[108632.125745] msm-dsi-panel:[dsi_panel_enable:4743] [LCD] dsi_panel_enable: DSI_CMD_SET_ON
+
+logcat中亮灭屏的关键字为PowerManagerService
+完整log如下：
+01-04 19:57:28.060  1516  1802 I PowerManagerService: Waking up from sleep (uid=1000 reason=android.policy:POWER)...
+01-04 19:57:28.061  1516  1802 D PowerManagerService: waking up from opPackageName = android reason is android.policy:POWER opUid = 1000
+01-04 19:57:33.724  1516  1802 I PowerManagerService: Going to sleep due to power button (uid 1000)...
+01-04 19:57:34.216  1516  1550 I PowerManagerService: Dozing...
+01-04 19:57:34.233  1516  1550 I PowerManagerService: Sleeping (uid 1000)...
+
+进入休眠后在dmesg中会有如下log
+[108631.467796] PM: suspend entry 2009-01-04 15:27:49.828446849 UTC
+[108632.001658] PM: suspend exit 2009-01-04 15:28:20.689922982 UTC
+
+
+如何根据上层log找到相对应的dmesg中的log
+首先PM：........................................UTC
+的时间戳是+0时区和logcat中的时间戳相差对应时区的时差。
+如上面log所示，logcat中和dmesg中的时间戳相差4h
+
+若系统进入休眠后被唤醒的流程应该是
+PM resume ------>  LCD on (low)------> LCD on (high)
+
+所以以亮灭屏事件为依据可以找到上层log和底层log之间的对应关系。
+首先在上层中找到符合问题发生时描述的log区域。
+其次根据该log区域的时间戳找到离该区域最近的PM 的 UTC时间
+之后根据PM log中的dmesg时间找到对应该上层log区域的底层log的区域
+
+
+如何抓取log
+adb shell dmesg > dmesg.log
+adb logcat -d > logcat.log
+
+23.查看重启前的log 需要root版本
+cat /proc/last_kmsg
+
+24.__GFP_NORETRY 和 oom-killing-的关系是什么， __GFP_NOWARNING的作用
+
+25.dts会在sys/firmware/devicetree/base下展开以供查看实际运行的dts内容。
+
+26.调试技巧，wowtech致工程师的一封信
+
+27.~/E1/device/xiaomi/sdm845_common/init.target.rc的作用
+
+28.device/xiaomi/beryllium/flash_scripts/build_all.sh全编整个代码
+
+29.fastboot flash boot boot.img将boot.img刷入flash的boot分区
+   fastboot boot boot.img 从boot.img启动，如果crash则使用flash中原有的boot.img
+
+
+30.frimware/image rm -rf gfber.* fpcber.* gfdip.* fpcdip.*               
+
+31.vim contents.xml
+
+32./proc/interrupts的含义
+
+33./d/regulator 查看regulator状态
+
+34.tar加密解密 
+加密tar -zcvf - NT36672A_DB810_HostDownload|openssl des3 -salt -k Mibsp123. | dd of=NT36672A_DB810_HostDownload.des3
+解密dd if=NT36672A_DB810_HostDownload.des3|openssl des3 -d -k Mibsp123.|tar zxf -
+
+35.chrdev和class_create,device_create的关系是什么？device_create中的父节点会影响什么
+
+36.container_of(ptr, struct, member)
+ptr和member不能同名，否则出错
+
+37./home/jianghao/disk2/F1_native_p/hardware/libhardware/tests
+/home/jianghao/disk2/F1_native_p/device/xiaomi/sm8150_common/init.target.rc
+
+38.init.target.rc相关
+https://community.nxp.com/docs/DOC-102537
+
+
+39.git branch --set-upstream-to m/master
