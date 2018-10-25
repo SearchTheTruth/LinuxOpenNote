@@ -1,0 +1,5 @@
+config SEQ_FILE_PRACTICE
+	tristate "SEQ FILE PRACTICE"
+	default n
+	help
+		This module is practice for how to use seq_file.
