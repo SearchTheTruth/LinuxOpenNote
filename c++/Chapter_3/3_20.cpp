@@ -25,5 +25,17 @@ int main ()
         cout << num_line[index] << " + " << num_line[index + 1] << " = " << sum << endl;
     }
 
+    for (index = 0; index < length; index++) {
+        if (index != length - 1 - index) {
+            sum = num_line[index] + num_line[length - 1 - index];
+            cout << num_line[index] << " + " << num_line[length - 1 - index] << " = " << sum << endl;
+            if (index + 1 == length / 2)
+                break;
+        } else {
+            sum = num_line[index];
+            cout << num_line[index] << " = " << sum << endl;
+            break;
+        }
+    }
     return 0;
 }
