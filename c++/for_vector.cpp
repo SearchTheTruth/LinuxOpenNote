@@ -14,13 +14,13 @@ int main()
 	{
 		tmp.push_back(i);
 	}
- 
+
 	for(auto &v : tmp)
 		cout << v << endl;
 /*
 	for(auto p = tmp.begin(); p != tmp.end(); p++)
 	{
-		cout << p <<endl;
+		cout << *p <<endl;
 	}
 */
 /*
