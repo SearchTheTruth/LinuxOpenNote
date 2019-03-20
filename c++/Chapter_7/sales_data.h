@@ -7,8 +7,7 @@ struct sales_data {
     sales_data(const std::string &name): bookNo(name) {};
     sales_data(const std::string &name, unsigned num, double unitprice):
         bookNo(name), units_sold(num), revenue(unitprice * units_sold) {};
-    sales_data(std::istream &is);
-
+    sales_data(std::istream &is) {is >> bookNo >> units_sold >> revenue;};
     std::string bookNo;
     unsigned units_sold = 0;
     double revenue = 0;

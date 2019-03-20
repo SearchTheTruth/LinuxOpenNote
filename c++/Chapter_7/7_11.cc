@@ -5,10 +5,6 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-sales_data::sales_data(std::istream &is)
-{
-    is >> bookNo >> units_sold >> revenue;
-}
 
 int main()
 {
