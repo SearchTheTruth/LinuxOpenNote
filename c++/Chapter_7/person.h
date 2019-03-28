@@ -8,6 +8,8 @@ struct person {
     std::string addr;
     std::string isName() const {return name;};
     std::string isAddr() const {return addr;};
+
+    person() = default;
 };
 
 std::istream &read(std::istream &is, struct person &per);
