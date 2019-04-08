@@ -4,8 +4,10 @@
 #include <iostream>
 
 struct person {
+private:
     std::string name;
     std::string addr;
+public:
     std::string isName() const {return name;};
     std::string isAddr() const {return addr;};
 
