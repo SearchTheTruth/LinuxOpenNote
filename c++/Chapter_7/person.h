@@ -4,6 +4,8 @@
 #include <iostream>
 
 struct person {
+friend std::istream &read(std::istream &is, struct person &per);
+friend std::ostream &print(std::ostream &os, const struct person &per);
 private:
     std::string name;
     std::string addr;
