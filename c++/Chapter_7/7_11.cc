@@ -23,5 +23,6 @@ int main()
     print(cout, input);
     cout << endl;
 
+    cout << "avg_price of total is " << total.avg_prices() << endl;
     return 0;
 }

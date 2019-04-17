@@ -7,7 +7,8 @@ class screen {
     public:
         typedef std::string::size_type pos;
         screen() = default;
-        screen(pos &r, pos &c, char &ch):
+        screen(pos r, pos c): length(r), height(c), content(r*c, ' ') {};
+        screen(pos r, pos c, char ch):
             length(r), height(c), content(r*c, ch) {};
         char get() const {return content(cursor)};
     private:
