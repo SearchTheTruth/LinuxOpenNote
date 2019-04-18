@@ -4,7 +4,19 @@
 #include <iostream>
 #include <string>
 
+class Screen;
+
+class Window_mgr {
+    public:
+        using screenIndex = vector::size_type;
+        void clear(screenIndex index);
+    private:
+        vector<Screen> Screens{Screen(5, 5, ' ')};
+};
+
+
 class Screen {
+    friend Window_mgr::clear(screenIndex index);
     public:
         typedef std::string::size_type pos;
 
@@ -36,6 +48,12 @@ class Screen {
             }
         };
 };
+
+inline void Window_mgr::clear(screenIndex index)
+{
+    Screen &s = Screens[index];
+    s.content = string(s.length * s.height, ' ');
+}
 
 inline Screen &Screen::move(pos r, pos c)
 {
