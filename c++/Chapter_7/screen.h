@@ -11,7 +11,7 @@ class Window_mgr {
         using screenIndex = vector::size_type;
         void clear(screenIndex index);
     private:
-        vector<Screen> Screens{Screen(5, 5, ' ')};
+        vector<Screen> screens;
 };
 
 
@@ -31,6 +31,7 @@ class Screen {
         Screen &set(pos r, pos c, char ch);
         Screen &display(std::ostream &os);
         const Screen &display(std::ostream &os) const;
+        pos size() const;
     private:
         pos cursor = 0;
         pos height = 0, length = 0;
@@ -51,7 +52,7 @@ class Screen {
 
 inline void Window_mgr::clear(screenIndex index)
 {
-    Screen &s = Screens[index];
+    Screen &s = screens[index];
     s.content = string(s.length * s.height, ' ');
 }
 
@@ -83,5 +84,10 @@ inline const Screen &Screen::display(std::ostream &os) const
 {
     do_display(os);
     return *this;
+}
+
+Screen::pos Screen::size()
+{
+    return height * length;
 }
 #endif
