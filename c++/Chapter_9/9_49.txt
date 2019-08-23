@@ -1,0 +1,7 @@
+Although MT wq wasted a lot of resource, the level of concurrency
+provided was unsatisfactory.  The limitation was common to both ST and
+MT wq albeit less severe on MT.  Each wq maintained its own separate
+worker pool.  A MT wq could provide only one execution context per CPU
+while a ST wq one for the whole system.  Work items had to compete for
+those very limited execution contexts leading to various problems
+including proneness to deadlocks around the single execution context. jh
