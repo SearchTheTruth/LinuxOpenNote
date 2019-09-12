@@ -22,8 +22,8 @@ void wordProcess(string &word)
 {
     wordLower(word);
     auto pos = word.begin();
-    while ((pos = find_if(pos, word.end(), bind(ispunct, _1))
-            != word.end()) {
+    while ((pos = find_if(pos, word.end(), ispunct)
+            != word.end())) {
         pos = word.erase(pos);
     }
 }
