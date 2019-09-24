@@ -22,6 +22,10 @@ map<string, string> buildMap(ifstream &map_file)
     string key, value, tmp;
 
     while (map_file >> key && getline(map_file, value)) {
+        if (key == string("test")) {
+            cout << "|" << value << "|" << endl;
+            cout << "value.size() = " << value.size() << endl;
+        }
         if (value.size() > 1) {
             value = value.substr(1);    //去除空格
             rules[key] = value;
