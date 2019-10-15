@@ -1,3 +1,5 @@
+#ifndef _STRBLOB_H
+#define _STRBLOB_H
 #include <memory>
 #include <iostream>
 #include <vector>
@@ -5,11 +7,13 @@
 #include <exception>
 #include <initializer_list>
 
-
 using namespace std;
+
+class StrBlobPtr;
 
 class StrBlob {
     typedef vector<string>::size_type size_type;
+    friend class StrBlobPtr;
     public:
         StrBlob() : data(make_shared<vector<string>>()) {};
         StrBlob(initializer_list<string> il) : data(make_shared<vector<string>>(il)) {};
@@ -36,12 +40,25 @@ class StrBlob {
         };
         int use_count() const {
             return data.use_count();
-        }
-
-    private:
+        };
+        StrBlobPtr begin();
+        StrBlobPtr end();
+       private:
         shared_ptr<vector<string>> data;
         void check(size_type i, const string &msg) const {
             if (i >= data->size())
                 throw out_of_range(msg);
         };
 };
+
+#include "StrBlobPtr.h"
+
+StrBlobPtr StrBlob::begin() {
+    return StrBlobPtr(*this);
+}
+
+StrBlobPtr StrBlob::end() {
+    return StrBlobPtr(*this, data->size());
+}
+
+#endif
