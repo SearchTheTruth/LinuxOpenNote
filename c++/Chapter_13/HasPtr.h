@@ -12,9 +12,10 @@ class HasPtr {
     }
 
     HasPtr& operator=(const HasPtr& org) {
-        if (!ps)
+        auto copy = new std::string(*(org.ps));
+        if (ps)
             delete ps;
-        ps = new std::string(*(org.ps));
+        ps = copy;
         i = org.i;
         return *this;
     }
@@ -23,7 +24,7 @@ class HasPtr {
         std::cout << ps << ": " << *ps << std::endl;
     }
 
-    HasPtr() = default;
+    HasPtr() : ps(nullptr), i(0) {};
     HasPtr(const std::string &s) : ps(new std::string(s)), i(0) {};
     HasPtr(const HasPtr &org) : ps(new std::string(*(org.ps))), i(org.i) {};
     private:
