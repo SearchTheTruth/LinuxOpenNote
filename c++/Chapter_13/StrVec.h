@@ -83,6 +83,12 @@ class StrVec {
                 alloc.deallocate(element, capacity());
             }
         }
+        void free_v2() {
+            if (element) {
+                for_each(element, first_free, [](string& ptr){alloc.destroy(&ptr);});
+                alloc.deallocate(element, capacity());
+            }
+        }
         void reallocate() {
             size_t newSize = size() ? size() * 2 : 1;
             if (rzerv > size())
