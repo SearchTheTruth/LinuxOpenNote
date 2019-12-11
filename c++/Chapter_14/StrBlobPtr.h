@@ -28,6 +28,9 @@ class StrBlobPtr {
         StrBlobPtr operator++(int);
         StrBlobPtr& operator--();
         StrBlobPtr operator--(int);
+        string& operator*() const;
+        string* operator->() const;
+
     private:
         weak_ptr<vector<string>> wpst;
         uint32_t curr;
@@ -90,5 +93,15 @@ StrBlobPtr operator-(const StrBlobPtr &org, size_t n)
     tmp.curr -= n;
     tmp.check(tmp.curr, "incream space not exist");
     return tmp;
+}
+string& StrBlobPtr::operator*() const
+{
+    auto p = check(curr, "deref space not exist");
+    return (*p)[curr];
+}
+
+string* StrBlobPtr::operator->() const
+{
+    return & this->operator*();
 }
 #endif
