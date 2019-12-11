@@ -73,6 +73,11 @@ class StrVec {
         string* end() const{
             return first_free;
         }
+        StrVec& operator=(initializer_list<string> il) {
+            free();
+            *this = StrVec(il);
+            return *this;
+        }
 
     private:
         pair<string*, string*> alloc_n_copy(auto* b, auto* e) {

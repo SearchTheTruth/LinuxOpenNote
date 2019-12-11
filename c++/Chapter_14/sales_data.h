@@ -16,6 +16,7 @@ public:
         bookNo(name), units_sold(num), revenue(unitprice * units_sold) {};
     sales_data(std::istream &is) {is >> bookNo >> units_sold >> revenue;};
     sales_data& operator+=(const sales_data&);
+    sales_data& operator=(const std::string &str);
 
     std::string isbn() const {return bookNo;};
     struct sales_data &combine (const struct sales_data &sec);
@@ -25,6 +26,12 @@ private:
     unsigned units_sold = 0;
     double revenue = 0;
 };
+
+sales_data& sales_data::operator=(const std::string &str)
+{
+    bookNo = str;
+    return *this;
+}
 
 sales_data operator+(const sales_data &l, const sales_data &r)
 {
