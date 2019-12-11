@@ -78,6 +78,12 @@ class StrVec {
             *this = StrVec(il);
             return *this;
         }
+        string& operator[](size_t n) {
+            return *(element + n);
+        }
+        const string& operator[](size_t n) const {
+            return *(element + n);
+        }
 
     private:
         pair<string*, string*> alloc_n_copy(auto* b, auto* e) {

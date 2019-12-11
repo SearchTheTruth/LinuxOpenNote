@@ -33,6 +33,12 @@ class Mystring{
             cap = element + org.size();
             return *this;
         }
+        char& operator[](size_t n) {
+            return *(element + n);
+        }
+        const char& operator[](size_t n) const {
+            return *(element + n);
+        }
         ~Mystring() {
             cout << "free" << endl;
             free();
