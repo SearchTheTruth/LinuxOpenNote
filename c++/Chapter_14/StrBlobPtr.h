@@ -94,6 +94,7 @@ StrBlobPtr operator-(const StrBlobPtr &org, size_t n)
     tmp.check(tmp.curr, "incream space not exist");
     return tmp;
 }
+
 string& StrBlobPtr::operator*() const
 {
     auto p = check(curr, "deref space not exist");
