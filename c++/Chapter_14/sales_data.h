@@ -17,6 +17,8 @@ public:
     sales_data(std::istream &is) {is >> bookNo >> units_sold >> revenue;};
     sales_data& operator+=(const sales_data&);
     sales_data& operator=(const std::string &str);
+    operator double() const { return avg_prices(); };
+    explicit operator std::string() const { return bookNo; };
 
     std::string isbn() const {return bookNo;};
     struct sales_data &combine (const struct sales_data &sec);
