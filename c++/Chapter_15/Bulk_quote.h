@@ -17,6 +17,12 @@ class Bulk_quote : public Quote{
                 return n * price;
             }
         };
+        void debug() const override {
+            Quote::debug();
+            std::cout << "class Bulk_quote::" << std::endl;
+            std::cout << "  " << "min_qty: " << min_qty << std::endl;
+            std::cout << "  " << "discount: " << discount << std::endl;
+        };
     private:
         size_t min_qty;
         double discount;

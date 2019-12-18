@@ -12,6 +12,11 @@ class Quote {
             //std::cout << "Quote" << std::endl;
             return n * price;
         };
+        virtual void debug() const {
+            std::cout << "class Quote::" << std::endl;
+            std::cout << "  " << "bookNo: " << bookNo << std::endl;
+            std::cout << "  " << "price: " << price << std::endl;
+        };
         Quote(const Quote &org) {
             std::cout << "Quote(const Quote &org)" << std::endl;
             bookNo = org.bookNo;
