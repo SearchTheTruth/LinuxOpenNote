@@ -1,30 +1,25 @@
 #ifndef __BULK_QUOTE_H
 #define __BULK_QUOTE_H
 #include <string>
-#include "Quote.h"
 #include <iostream>
+#include "Disc_quote.h"
 
-class Bulk_quote : public Quote{
+class Bulk_quote : public Disc_quote{
     public:
         Bulk_quote() = default;
         Bulk_quote(std::string name, double prc, size_t num, double rate) :\
-            Quote(name, prc), min_qty(num), discount(rate) {};
+            Disc_quote(name, prc, num, rate) {};
         double net_price(size_t n) const override {
             //std::cout << "Bulk_quote" << std::endl;
-            if (n >= min_qty) {
+            if (n >= quantity) {
                 return n * (1 - discount) * price;
             } else {
                 return n * price;
             }
         };
         void debug() const override {
-            Quote::debug();
+            Disc_quote::debug();
             std::cout << "class Bulk_quote::" << std::endl;
-            std::cout << "  " << "min_qty: " << min_qty << std::endl;
-            std::cout << "  " << "discount: " << discount << std::endl;
         };
-    private:
-        size_t min_qty;
-        double discount;
 };
 #endif

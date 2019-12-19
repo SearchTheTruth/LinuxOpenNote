@@ -1,25 +1,17 @@
 #ifndef __LIMIT_QUOTE_H
 #define __LIMIT_QUOTE_H
 
-#include "Quote.h"
+#include "Disc_quote.h"
 
-class Limit_quote : public Quote {
+using namespace std;
+
+class Limit_quote : public Disc_quote {
     public:
-        Limit_quote(const Quote &base, size_t min, size_t max, double off) :\
-            Quote(base), min_qty(min), max_qty(max), discount(off) {};
+        Limit_quote(string name, double prc, size_t n, double off) :\
+            Disc_quote(name, prc, n, off) {};
         double net_price(size_t n) const override {
-            if (n < min_qty) {
-                return n * price;
-            } else if (n >= min_qty && n <= max_qty) {
-                return n * (1 - discount) * price;
-            } else {
-                return (n - max_qty) * price + max_qty * (1 - discount) * price;
-            }
+            return n * price * (n > quantity ? 1 : 1 - discount);
         };
-    private:
-        size_t min_qty;
-        size_t max_qty;
-        double discount;
 };
 
 #endif
