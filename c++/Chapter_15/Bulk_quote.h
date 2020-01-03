@@ -7,8 +7,11 @@
 class Bulk_quote : public Disc_quote{
     public:
         Bulk_quote() = default;
+        /*
         Bulk_quote(std::string name, double prc, size_t num, double rate) :\
             Disc_quote(name, prc, num, rate) {};
+        */
+        using Disc_quote::Disc_quote;
         Bulk_quote(const Bulk_quote &org) : Disc_quote(org) {
             std::cout << "Bulk_quote(const Bulk_quote &org)" << std::endl;
         };
