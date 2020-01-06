@@ -22,13 +22,22 @@ class Quote {
             bookNo = org.bookNo;
             price = org.price;
         };
+        Quote(Quote &&org) = default;
         Quote& operator=(const Quote &org) {
             std::cout << "Quote& operator=(const Quote &org)" << std::endl;
             bookNo = org.bookNo;
             price = org.price;
             return *this;
         }
+        Quote& operator=(Quote &&org) {
+            std::cout << "Quote& operator=(Quote &&org)" << std::endl;
+            bookNo = org.bookNo;
+            price = org.price;
+            return *this;
+        }
         virtual ~Quote() = default;
+        virtual Quote* clone() const &;
+        virtual Quote* clone() &&;
         std::string isbn() { return bookNo; };
     private:
         std::string bookNo;
@@ -36,4 +45,11 @@ class Quote {
         double price = 0.0;
 };
 
+Quote* Quote::clone() const & {
+    return new Quote(*this);
+}
+
+Quote* Quote::clone() && {
+    return new Quote(std::move(*this));
+}
 #endif

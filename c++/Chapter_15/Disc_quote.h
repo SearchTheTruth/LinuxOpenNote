@@ -13,12 +13,21 @@ class Disc_quote : public Quote {
             quantity = org.quantity;
             discount = org.discount;
         };
+        Disc_quote(Disc_quote &&org) = default;
         Disc_quote& operator=(const Disc_quote &org) {
-            std::cout << "Disc_quote operator=" << std::endl;
+            std::cout << "Disc_quote operator=(const Disc_quote &)" << std::endl;
             Quote::operator=(org);
             quantity = org.quantity;
             discount = org.discount;
+            return *this;
         };
+        Disc_quote& operator=(Disc_quote &&org) {
+            std::cout << "Disc_quote operator=(Disc_quote &&)" << std::endl;
+            Quote::operator=(std::move(org));
+            quantity = org.quantity;
+            discount = org.discount;
+            return *this;
+        }
         ~Disc_quote() override = default;
         double net_price(size_t n) const = 0;
         void debug() const override {
