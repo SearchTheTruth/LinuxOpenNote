@@ -1,0 +1,179 @@
+diff --git a/c++/Chapter_15/15_39.cc b/c++/Chapter_15/15_39.cc
+index a58f3ef..8978efd 100644
+--- a/c++/Chapter_15/15_39.cc
++++ b/c++/Chapter_15/15_39.cc
+@@ -11,16 +11,16 @@ int main()
+     ifstream infd(TXT_PATH);
+     if (infd) {
+         TextQuery txt(infd);
+-
++#if 0
+         cout << "word =====" << endl;
+         Query word_1("fiery");
+         auto w1_rst = word_1.eval(txt);
+         w1_rst.print();
+-
++#endif
+         cout << "not =====" << endl;
+         (~Query("Daddy")).eval(txt).print();
+-
+         cout << "or =====" << endl;
++#if 0
+         auto orword_1 = Query("hair") | Query("Alice");
+         orword_1.eval(txt).print();
+ 
+@@ -31,6 +31,7 @@ int main()
+         cout << "mixer=====" << endl;
+         auto mixer_1 = Query("fiery") & Query("bird") | Query("wind");
+         mixer_1.eval(txt).print();
++#endif
+     }
+     return 0;
+ }
+diff --git a/c++/Chapter_15/AdvanceQuery.cc b/c++/Chapter_15/AdvanceQuery.cc
+index 033d240..9484640 100644
+--- a/c++/Chapter_15/AdvanceQuery.cc
++++ b/c++/Chapter_15/AdvanceQuery.cc
+@@ -1,19 +1,20 @@
+ #include "AdvanceQuery.h"
+ #include <algorithm>
+ #include <iterator>
++#include <iostream>
+ 
+ using namespace std;
+ 
+ Query operator~(const Query &in_q) {
+-    return shared_ptr<Query_base> (new NotQuery(in_q));
++    return new NotQuery(in_q);
+ }
+ 
+ Query operator&(const Query &in_l, const Query &in_r) {
+-    return shared_ptr<Query_base> (new AndQuery(in_l, in_r));
++    return new AndQuery(in_l, in_r);
+ }
+ 
+ Query operator|(const Query &in_l, const Query &in_r) {
+-    return shared_ptr<Query_base> (new OrQuery(in_l, in_r));
++    return new OrQuery(in_l, in_r);
+ }
+ 
+ QueryResult WordQuery::eval(TextQuery &t) const {
+@@ -21,6 +22,7 @@ QueryResult WordQuery::eval(TextQuery &t) const {
+ }
+ 
+ QueryResult NotQuery::eval(TextQuery &t) const {
++    cout << "NotQuery::eval IN" << endl;
+     auto notTmp = q.eval(t);
+     set<line_no> result;
+     line_no sz = notTmp.getfile()->size();
+@@ -33,6 +35,7 @@ QueryResult NotQuery::eval(TextQuery &t) const {
+         else if(beg != end)
+             ++beg;
+     }
++    cout << "NotQuery::eval IN" << endl;
+     return QueryResult(notTmp.getfile(), rep(), result);
+ }
+ 
+diff --git a/c++/Chapter_15/AdvanceQuery.h b/c++/Chapter_15/AdvanceQuery.h
+index 02378a3..0f351b0 100644
+--- a/c++/Chapter_15/AdvanceQuery.h
++++ b/c++/Chapter_15/AdvanceQuery.h
+@@ -3,14 +3,18 @@
+ #include "TextQuery.h"
+ #include <string>
+ #include <memory>
++#include <iostream>
+ 
+ using namespace std;
+ 
+ class Query_base {
+     friend class Query;
++    public:
++        virtual ~Query_base() {
++            cout << "~Query_base()" << endl;
++        };
+     protected:
+         using line_no = TextQuery::line_no;
+-        virtual ~Query_base() = default;
+     private:
+         virtual QueryResult eval(TextQuery &t) const = 0;
+         virtual string rep() const = 0;
+@@ -18,8 +22,14 @@ class Query_base {
+ 
+ class WordQuery : public Query_base {
+     friend class Query;
++    public:
++        ~WordQuery() {
++            cout << "~WordQuery()" << endl;
++        }
+     private:
+-        WordQuery(const string &s) : word(s) {};
++        WordQuery(const string &s) : word(s) {
++            cout << "WordQuery(const string &s)" << endl;
++        };
+         QueryResult eval(TextQuery &t) const override;
+         string rep() const override {
+             return word;
+@@ -33,7 +43,9 @@ class Query {
+     friend Query operator~(const Query &q);
+     public:
+         Query(const string &s) {
+-            p = shared_ptr<Query_base>(new WordQuery(s));
++            cout << "Query(const string &s) IN = " << s << endl;
++            p = new WordQuery(s);
++            cout << "Query(const string &s) OUT" << endl;
+         }
+         QueryResult eval(TextQuery &t) const {
+             return p->eval(t);
+@@ -41,17 +53,27 @@ class Query {
+         string rep() const {
+             return p->rep();
+         }
++        ~Query() {
++            cout << "~Query() IN" << endl;
++                delete p;
++            cout << "~Query() OUT" << endl;
++        }
+     private:
+-        Query(shared_ptr<Query_base> base) : p(base) {};
+-        shared_ptr<Query_base> p;
++        Query(Query_base *base) : p(base) {};
++        Query_base *p;
+ };
+ 
+ class NotQuery : public Query_base {
+     friend Query operator~(const Query &q);
++    public:
++        ~NotQuery() {
++            cout << "~NotQuery()" << endl;
++        }
+     private:
+         NotQuery(const Query & in_q) : q(in_q) {};
+         QueryResult eval(TextQuery &t) const override;
+         string rep() const override {
++            cout << "NotQuery::rep() IN" << endl;
+             return "~(" + q.rep() + ")";
+         };
+ 
+diff --git a/c++/Chapter_15/AdvanceQuery_build b/c++/Chapter_15/AdvanceQuery_build
+index 11de1e5..84380b1 100755
+--- a/c++/Chapter_15/AdvanceQuery_build
++++ b/c++/Chapter_15/AdvanceQuery_build
+@@ -1 +1 @@
+-g++ AdvanceQuery.cc 15_39.cc -Wall
++g++ AdvanceQuery.cc 15_39.cc -Wall -g
+diff --git a/c++/Chapter_15/TextQuery.h b/c++/Chapter_15/TextQuery.h
+index 164657b..33cab1a 100644
+--- a/c++/Chapter_15/TextQuery.h
++++ b/c++/Chapter_15/TextQuery.h
+@@ -22,6 +22,10 @@ class QueryResult {
+         QueryResult(shared_ptr<vector<string>> textOrig, const string schOrig, set<size_t> lineOrig) :
+             QueryResult(textOrig, schOrig, lineOrig, 0) {};
+ 
++        ~QueryResult() {
++            cout << "~QueryResult()" << endl;
++        }
++
+         shared_ptr<vector<string>> getfile() const {return text;}
+         set<size_t>::iterator begin() { return line.begin(); }
+         set<size_t>::iterator end() { return line.end(); }
