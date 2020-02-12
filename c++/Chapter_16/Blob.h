@@ -19,6 +19,7 @@ template <typename T> class Blob
     public:
         Blob() : data(make_shared<vector<T>>()) {};
         Blob(const initializer_list<T> &il) : data(make_shared<vector<T>>(il)) {};
+        template <typename It> Blob(It beg, It end) : data(make_shared<vector<T>>(beg, end)) {};
         void push_back(const T &);
         void pop_back();
         T& back() const;
