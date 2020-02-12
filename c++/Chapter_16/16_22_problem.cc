@@ -11,6 +11,12 @@ int main()
     q = make_shared<int>(0);
     q = p;
 
-    share_ptr<int> c(q, DebugDelete());
+    int *ip, *ip2;
+    shared_ptr<int> c(ip, DebugDelete());   //right
+    //shared_ptr<int> c(p, DebugDelete());   //error 只接受普通指针
+
+    shared_ptr<int> d;
+    d.reset(ip2, DebugDelete());            //right
+    //d.reset(p, DebugDelete());            //error 只接受普通指针
     return 0;
 }
