@@ -42,15 +42,20 @@ class QueryResult {
 class TextQuery {
     public:
         typedef vector<string>::size_type line_no;
+#if 0  //set deleter
         TextQuery() {
             text = shared_ptr<vector<string>> (new vector<string>, DebugDelete());
             clew = shared_ptr<map<string, set<size_t>>> (new map<string, set<size_t>>, DebugDelete());
         };
-
-        ~TextQuery() {
-            cout << "~TextQuery()" << endl;
-        };
-
+#else  //use default deleter
+        TextQuery() : text(make_shared<vector<string>>()),\
+                      clew(make_shared<map<string, set<size_t>>>()) {
+                          shared_ptr<vector<string>> tmp_text(new vector<string>, DebugDelete());
+                          text = tmp_text;
+                          shared_ptr<map<string, set<size_t>>> tmp_clew(new map<string, set<size_t>>, DebugDelete());
+                          clew = tmp_clew;
+                      };
+#endif
         TextQuery(ifstream &input) : TextQuery() {
             if (!input)
                 throw runtime_error("invaild stream");
