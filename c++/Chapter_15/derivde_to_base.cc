@@ -53,6 +53,8 @@ class protected_grandfather : public protected_derived {
     public:
         int f = 9;
         void gf_body(void) {
+            //此处可以访问到基类的公共成员，所以可以进行protected_grandfather到base的转换.
+            protected_grandfather::protected_derived::base::a;
             base *ptr = new protected_grandfather;
         }
 };
