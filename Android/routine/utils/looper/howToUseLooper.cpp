@@ -19,7 +19,7 @@ enum {
 
 class HandlerA : public MessageHandler {
 	public:
-		void handleMessage(const Message& message) override;
+		void handleMessage(const Message& message);
 };
 
 void HandlerA::handleMessage(const Message &msg)
@@ -29,7 +29,7 @@ void HandlerA::handleMessage(const Message &msg)
 
 class HandlerB : public MessageHandler {
 	public:
-		void handleMessage(const Message& message) override;
+		void handleMessage(const Message& message);
 };
 
 void HandlerB::handleMessage(const Message &msg)
@@ -38,7 +38,7 @@ void HandlerB::handleMessage(const Message &msg)
 }
 
 class Sender : public Thread {
-	bool threadLoop() override;
+	bool threadLoop();
 };
 
 bool Sender::threadLoop()
@@ -60,8 +60,8 @@ bool Sender::threadLoop()
 }
 
 class Receiver : public Thread {
-	bool threadLoop() override;
-	status_t readyToRun() override;
+	bool threadLoop();
+	status_t readyToRun();
 };
 
 bool Receiver::threadLoop()
