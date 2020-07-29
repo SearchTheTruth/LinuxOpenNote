@@ -1,0 +1,7 @@
+package android.hardware.newlifecallback@1.0;
+
+struct HalEvent {
+
+	int32_t value;
+
+};

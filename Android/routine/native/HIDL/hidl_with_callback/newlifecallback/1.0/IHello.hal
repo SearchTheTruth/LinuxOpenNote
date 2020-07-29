@@ -1,0 +1,11 @@
+package android.hardware.newlifecallback@1.0;
+
+import IHelloCallback;
+
+interface IHello {
+
+	init();
+	release();
+	setCallback(IHelloCallback cb);
+
+};
