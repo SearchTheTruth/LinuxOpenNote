@@ -1,0 +1,5 @@
+package android.hardware.newlife@1.0;
+
+interface INewlife {
+	helloWorld(string name) generates (string result);
+};
