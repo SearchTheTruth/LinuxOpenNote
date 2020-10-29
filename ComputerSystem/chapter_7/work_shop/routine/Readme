@@ -1,0 +1,25 @@
+01.WhatLinkIs
+    展示链接的作用以及分离编译的使用方法
+02.HelloWorldTransform
+    分析编译器各个阶段的作用及其产物
+03.SymbolType
+    查看符号类型，全局符号，外部符号，局部符号
+04.SameLocal
+    同名局部符号的处理方式
+05.GolbalSymbol
+    展示全局符号不同的处理规则
+06.StaticLib/FileSize
+    使用静态库与只使用可重定位模块对可执行文件大小的影响
+07.StaticLib/Depands
+    符号解析时，模块的输入顺序对编译结果的影响
+    main->libx->liby->libx
+08.Relocate
+    重定位时，计算相对地址的例程
+09.ShareLib/linkTime
+    动态库的创建及程序加载时使用动态库的例程
+10.ShareLib/runTime
+    程序运行时，使用动态库的例程
+11.InterPositioning
+    库打桩的简单例程，分别可在编译时，链接时，运行时使用
+
+
