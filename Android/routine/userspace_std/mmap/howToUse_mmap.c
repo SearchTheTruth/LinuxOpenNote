@@ -16,6 +16,7 @@ int main()
 	if (fd < 0)
 		printf("open failed\n");
 
+    //获取文件信息,如大小
 	if (fstat(fd, &sb) == -1)
 		printf("fstat error\n");
 
