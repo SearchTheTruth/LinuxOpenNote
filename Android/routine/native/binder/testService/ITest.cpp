@@ -9,7 +9,7 @@ status_t BnTest::onTransact(uint32_t code, const Parcel& data, Parcel* reply, ui
 	switch (code) {
 		case SET:
 			CHECK_INTERFACE(ITest, data, reply);
-		err = setListContent(data.readInt32(), data.readString16());
+			err = setListContent(data.readInt32(), data.readString16());
 			reply->writeInt32(err);
 		break;
 		case GET:
